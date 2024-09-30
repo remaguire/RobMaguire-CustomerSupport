@@ -22,10 +22,13 @@ import jakarta.servlet.annotation.*;
 )
 public class TicketServlet extends HttpServlet {
     private volatile int TICKET_ID_SEQUENCE = 1;
-    private Map<Integer, Ticket> tickets = new HashMap<>();
+    private final Map<Integer, Ticket> tickets = new HashMap<>();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
+        response.setCharacterEncoding("UTF-8");
+
         final String action = Optional.ofNullable(request.getParameter("action")).orElse("list");
         switch (action) {
             case "create":
@@ -45,6 +48,9 @@ public class TicketServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
+        response.setCharacterEncoding("UTF-8");
+
         final String action = Optional.ofNullable(request.getParameter("action")).orElse("list");
         switch (action) {
             case "create":
