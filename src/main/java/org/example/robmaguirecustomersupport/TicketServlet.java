@@ -1,14 +1,21 @@
 package org.example.robmaguirecustomersupport;
 
-import java.io.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
 
 @WebServlet(
         name = "ticketServlet",
@@ -25,10 +32,7 @@ public class TicketServlet extends HttpServlet {
     private final Map<Integer, Ticket> tickets = new HashMap<>();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
-        response.setCharacterEncoding("UTF-8");
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         final String action = Optional.ofNullable(request.getParameter("action")).orElse("list");
         switch (action) {
             case "create":
@@ -42,15 +46,12 @@ public class TicketServlet extends HttpServlet {
                 break;
             case "list":
             default:
-                this.listTickets(response);
+                this.listTickets(request, response);
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
-        response.setCharacterEncoding("UTF-8");
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         final String action = Optional.ofNullable(request.getParameter("action")).orElse("list");
         switch (action) {
             case "create":
@@ -62,18 +63,9 @@ public class TicketServlet extends HttpServlet {
         }
     }
 
-    private void listTickets(HttpServletResponse response) throws IOException {
-        final PrintWriter writer = response.getWriter();
-        for (Map.Entry<Integer, Ticket> ticketEntry : tickets.entrySet()) {
-            final int ticketId = ticketEntry.getKey();
-            final Ticket ticket = ticketEntry.getValue();
-            writer.append(String.format("""
-                            Ticket #%d: <a href="tickets?action=view&ticketId=%s">%s</a> (customer: %s)<br/>\\r\\n""",
-                    ticketId,
-                    ticketId,
-                    ticket.getSubject(),
-                    ticket.getCustomerName()));
-        }
+    private void listTickets(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        request.setAttribute("tickets", tickets);
+        request.getRequestDispatcher("/WEB-INF/jsp/view/listTickets.jsp").forward(request, response);
     }
 
     private void viewTicket(HttpServletRequest request, HttpServletResponse response) throws IOException {
