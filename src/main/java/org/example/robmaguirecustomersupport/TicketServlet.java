@@ -68,40 +68,15 @@ public class TicketServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/jsp/view/listTickets.jsp").forward(request, response);
     }
 
-    private void viewTicket(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void viewTicket(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         final String ticketId = request.getParameter("ticketId");
         final Ticket ticket = this.getTicket(ticketId, response);
         if (ticket == null) return;
 
-        final PrintWriter writer = response.getWriter();
-        writer.append(String.format("""
-                        <h2>Ticket #%s: %s</h2><br>
-                        <i>Customer Name - %s</i><br>
-                        <br>
-                        %s<br>
-                        <br>""",
-                ticketId,
-                ticket.getSubject(),
-                ticket.getCustomerName(),
-                ticket.getTicketBody()));
+        request.setAttribute("ticketId", ticketId);
+        request.setAttribute("ticket", ticket);
 
-        final Map<String, Attachment> attachmentMap = ticket.getAttachments();
-        if (!attachmentMap.isEmpty()) {
-            writer.append("Attachments: ");
-            for (Map.Entry<String, Attachment> attachmentEntry : attachmentMap.entrySet()) {
-                final String attachmentId = attachmentEntry.getKey();
-                final Attachment attachment = attachmentEntry.getValue();
-                writer.append(String.format("""
-                                <a href="tickets?action=download&ticketId=%s&attachment=%s>%s</a>""",
-                        attachmentId,
-                        attachment.getName(),
-                        attachment.getName()));
-            }
-            writer.append("<br><br>");
-        }
-
-        writer.append("""
-                <a href="tickets">Return to list tickets</a><br>""");
+        request.getRequestDispatcher("/WEB-INF/jsp/view/viewTicket.jsp").forward(request, response);
     }
 
     private void createTicket(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
