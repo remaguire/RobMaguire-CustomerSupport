@@ -1,0 +1,12 @@
+<html>
+<body>
+<nav>
+    <a href="tickets?action=create">New Ticket</a>
+    <a href="tickets?action=list">List Tickets</a>
+</nav>
+
+<footer>
+    <br>&copy; 2024 Robert Maguire
+</footer>
+</body>
+</html>
