@@ -36,7 +36,7 @@ public class TicketServlet extends HttpServlet {
         final String action = Optional.ofNullable(request.getParameter("action")).orElse("list");
         switch (action) {
             case "create":
-                this.showTicketForm(response);
+                this.showTicketForm(request, response);
                 break;
             case "view":
                 this.viewTicket(request, response);
@@ -104,7 +104,7 @@ public class TicketServlet extends HttpServlet {
                 <a href="tickets">Return to list tickets</a><br>""");
     }
 
-    private void createTicket(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void createTicket(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         final Ticket ticket = new Ticket();
         ticket.setCustomerName(request.getParameter("customerName"));
         ticket.setSubject(request.getParameter("subject"));
@@ -117,7 +117,7 @@ public class TicketServlet extends HttpServlet {
         }
 
         final int ticketId;
-        synchronized (this){
+        synchronized (this) {
             ticketId = this.TICKET_ID_SEQUENCE++;
             this.tickets.put(ticketId, ticket);
         }
@@ -149,25 +149,8 @@ public class TicketServlet extends HttpServlet {
         stream.write(attachment.getContents());
     }
 
-    private void showTicketForm(HttpServletResponse response) throws IOException {
-        final PrintWriter writer = response.getWriter();
-        writer.append("""
-                <h2>Create a Ticket</h2><br>
-                <form method="POST" action="tickets" enctype="multipart/form-data"><br>
-                <input type="hidden" name="action" value="create"><br>
-                Your Name<br>
-                <input type="text" name="customerName"><br>
-                <br>
-                Subject<br>
-                <input type="text" name="subject"><br>
-                <br>
-                Body<br>
-                <textarea name="body" rows="5" cols="30"></textarea><br>
-                <b>Attachments</b><br>
-                <input type="file" name="file1"<br>
-                <br>
-                <input type="submit" value="Submit"><br>
-                </form?<br>""");
+    private void showTicketForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        request.getRequestDispatcher("/WEB-INF/jsp/view/ticketForm.jsp").forward(request, response);
     }
 
     private Attachment processAttachment(Part filePart) throws IOException {
