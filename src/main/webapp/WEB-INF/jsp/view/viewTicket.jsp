@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <h2>Ticket #${ticketId}:" /></h2>
+    <h2>Ticket #${ticketId}:</h2>
     <p><i>Customer Name: <c:out value="${ticket.customerName}" /></i></p>
     <p>Subject: <c:out value="${ticket.subject}" /></p>
     <p><c:out value="${ticket.ticketBody}"/></p>
