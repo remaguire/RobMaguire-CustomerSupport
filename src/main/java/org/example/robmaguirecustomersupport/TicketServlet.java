@@ -12,7 +12,6 @@ import jakarta.servlet.http.Part;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +32,11 @@ public class TicketServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        if (request.getSession().getAttribute("username") == null) {
+            response.sendRedirect("login");
+            return;
+        }
+
         final String action = Optional.ofNullable(request.getParameter("action")).orElse("list");
         switch (action) {
             case "create":
@@ -52,6 +56,11 @@ public class TicketServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        if (request.getSession().getAttribute("username") == null) {
+            response.sendRedirect("login");
+            return;
+        }
+
         final String action = Optional.ofNullable(request.getParameter("action")).orElse("list");
         switch (action) {
             case "create":
@@ -81,7 +90,7 @@ public class TicketServlet extends HttpServlet {
 
     private void createTicket(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         final Ticket ticket = new Ticket();
-        ticket.setCustomerName(request.getParameter("customerName"));
+        ticket.setCustomerName((String) request.getSession().getAttribute("username"));
         ticket.setSubject(request.getParameter("subject"));
         ticket.setTicketBody(request.getParameter("body"));
 

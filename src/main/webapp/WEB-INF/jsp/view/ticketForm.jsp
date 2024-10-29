@@ -1,5 +1,4 @@
-<%@ page session="false" %>
-<!DOCTYPE html>
+<html>
 <head>
     <title>Customer Support</title>
 </head>
@@ -9,8 +8,6 @@
     <br>
     <form method="post" action="tickets" enctype="multipart/form-data">
         <input type="hidden" name="action" value="create">
-        <p>Your Name</p>
-        <input type="text" name="customerName">
         <p>Subject</p>
         <input type="text" name="subject">
         <p>Body</p>>
