@@ -1,8 +1,25 @@
 <html>
 <body>
 <nav>
-    <a href="tickets?action=create">New Ticket</a>
-    <a href="tickets?action=list">List Tickets</a>
+    <a href="<c:url value="tickets?action=create" />">New Ticket</a>
+    <a href="<c:url value="tickets?action=list" />">List Tickets</a>
+    <%
+        if (session.getAttribute("username") == null) {
+    %>
+    <a href="<c:url value="/login?action=signup" />">Sign up</a>
+    <%
+        }
+        else {
+            if (session.getAttribute("admin") != null) {
+    %>
+    <a href="<c:url value="/sessions" />">List Sessions</a>
+    <%
+            }
+    %>
+    <a href="<c:url value="/login?logout" />">Log out</a>
+    <%
+        }
+    %>
 </nav>
 
 <footer>
