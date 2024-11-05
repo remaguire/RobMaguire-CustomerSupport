@@ -15,10 +15,7 @@
         Attachments:
         <c:forEach items="${ticket.attachments}" var="attachment" varStatus="status">
         <c:if test="${!status.first}">, </c:if>
-            <a href="<c:url value="/tickets">
-                <c:param name="action" value="download" />
-                <c:param name="ticketId" value="${ticketId}" />
-                <c:param name="attachment" value="${attachment.value.name}" />
+            <a href="<c:url value="/ticket/${ticketId}/attachment/${attachment.value.name}">
                 </c:url>"><c:out value="${attachment.value.name}" /></a>
         </c:forEach>
     </c:if>

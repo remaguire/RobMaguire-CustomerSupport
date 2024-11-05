@@ -27,7 +27,25 @@ public class LoginController {
         admin.add("remaguire");
     }
 
-    public record LoginForm(String username, String password) {
+    public static class LoginForm {
+        private String username;
+        private String password;
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
     }
 
     @RequestMapping("logout")
@@ -42,7 +60,7 @@ public class LoginController {
             return getTicketRedirect();
 
         model.put("loginFailed", false);
-        model.put("loginForm", new LoginForm(null, null));
+        model.put("loginForm", new LoginForm());
         return new ModelAndView("login");
     }
 
@@ -51,11 +69,12 @@ public class LoginController {
         if (session.getAttribute("username") == null)
             return getTicketRedirect();
 
-        final var user = form.username();
-        final var password = form.password();
+        final var user = form.getUsername();
+        final var password = form.getPassword();
         if (user == null || password == null || !users.containsKey(user) || password.equals(users.get(user))) {
+            form.setPassword(null);
             model.put("loginFailed", true);
-            model.put("loginForm", new LoginForm(form.username, null));
+            model.put("loginForm", form);
             return new ModelAndView("login");
         }
 
@@ -71,7 +90,7 @@ public class LoginController {
             return getTicketRedirect();
 
         model.put("loginFailed", false);
-        model.put("loginForm", new LoginForm(null, null));
+        model.put("loginForm", new LoginForm());
         return new ModelAndView("signup");
     }
 
@@ -80,11 +99,11 @@ public class LoginController {
         if (session.getAttribute("username") != null)
             return getTicketRedirect();
 
-        final var user = form.username();
-        final var password = form.password();
+        final var user = form.getUsername();
+        final var password = form.getPassword();
         if (user == null || password == null || users.containsKey(user)) {
             model.put("loginFailed", true);
-            model.put("loginForm", new LoginForm(null, null));
+            model.put("loginForm", form);
             return new ModelAndView("signup");
         }
 

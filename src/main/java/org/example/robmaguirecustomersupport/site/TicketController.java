@@ -21,7 +21,34 @@ public class TicketController {
     private volatile int TICKET_ID_SEQUENCE = 1;
     private final Map<Integer, Ticket> tickets = new HashMap<>();
 
-    public record TicketForm(String subject, String body, List<MultipartFile> attachments) {
+    public static class TicketForm {
+        private String subject;
+        private String body;
+        private List<MultipartFile> attachments;
+
+        public String getSubject() {
+            return subject;
+        }
+
+        public void setSubject(String subject) {
+            this.subject = subject;
+        }
+
+        public String getBody() {
+            return body;
+        }
+
+        public void setBody(String body) {
+            this.body = body;
+        }
+
+        public List<MultipartFile> getAttachments() {
+            return attachments;
+        }
+
+        public void setAttachments(List<MultipartFile> attachments) {
+            this.attachments = attachments;
+        }
     }
 
     @RequestMapping(value = {"", "list"}, method = RequestMethod.GET)
@@ -53,20 +80,20 @@ public class TicketController {
         return new DownloadingView(attachment.getName(), attachment.getContents());
     }
 
-    @RequestMapping(value = "create", method = RequestMethod.GET)
-    public String create(Map<String, Object> model) {
-        model.put("ticketForm", new TicketForm(null, null, null));
+    @RequestMapping(value = "add", method = RequestMethod.GET)
+    public String add(Map<String, Object> model) {
+        model.put("ticketForm", new TicketForm());
         return "ticket/add";
     }
 
-    @RequestMapping(value = "create", method = RequestMethod.POST)
-    public View create(HttpSession session, TicketForm form) throws IOException {
+    @RequestMapping(value = "add", method = RequestMethod.POST)
+    public View add(HttpSession session, TicketForm form) throws IOException {
         final var ticket = new Ticket();
         ticket.setCustomerName((String) session.getAttribute("username"));
-        ticket.setSubject(form.subject());
-        ticket.setTicketBody(form.body());
+        ticket.setSubject(form.getSubject());
+        ticket.setTicketBody(form.getBody());
 
-        for (MultipartFile part : form.attachments()) {
+        for (MultipartFile part : form.getAttachments()) {
             final var attachment = new Attachment();
             attachment.setName(part.getOriginalFilename());
             attachment.setContents(part.getBytes());

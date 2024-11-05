@@ -14,7 +14,7 @@
         }
     %>
 
-    <form method="POST" action="<c:url value="/login" />">
+    <form method="POST" action="<c:url value="/signup" />">
         <input type="hidden" name="action" value="signup">
         <p>Username</p>
         <input type="text" name="username" />

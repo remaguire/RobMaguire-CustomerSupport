@@ -13,10 +13,8 @@
         </c:when>
         <c:otherwise>
             <c:forEach var="entry" items="${tickets}">
-                <p>Ticket #${entry.key}: <a href="<c:url value="/tickets">
-                    <c:param name="action" value="view" />
-                    <c:param name="ticketId" value="${entry.key}" /></c:url>">
-                    ${entry.value.subject}</a></p>
+                <p>Ticket #${entry.key}: <a href="<c:url value="/ticket/view/${entry.key}"/>">
+                        ${entry.value.subject}</a></p>
             </c:forEach>
         </c:otherwise>
     </c:choose>
