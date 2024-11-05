@@ -1,4 +1,4 @@
-package org.example.robmaguirecustomersupport;
+package org.example.robmaguirecustomersupport.site;
 
 import java.beans.JavaBean;
 
