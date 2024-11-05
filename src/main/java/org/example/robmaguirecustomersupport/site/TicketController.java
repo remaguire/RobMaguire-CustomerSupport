@@ -2,6 +2,7 @@ package org.example.robmaguirecustomersupport.site;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -87,7 +88,7 @@ public class TicketController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public View add(HttpSession session, TicketForm form) throws IOException {
+    public View add(HttpSession session, @ModelAttribute("ticketForm") TicketForm form) throws IOException {
         final var ticket = new Ticket();
         ticket.setCustomerName((String) session.getAttribute("username"));
         ticket.setSubject(form.getSubject());
