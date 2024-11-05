@@ -1,4 +1,4 @@
-package org.example.robmaguirecustomersupport;
+package org.example.robmaguirecustomersupport.site;
 
 import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.http.HttpSessionEvent;
