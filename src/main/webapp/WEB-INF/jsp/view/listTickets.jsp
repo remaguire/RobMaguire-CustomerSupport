@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%--@elvariable id="tickets" type="java.util.Map<Integer, org.example.robmaguirecustomersupport.Ticket>"--%>
+<%--@elvariable id="tickets" type="java.util.Map<Integer, org.example.robmaguirecustomersupport.site.Ticket>"--%>
 <html>
 <head>
     <title>List Tickets</title>

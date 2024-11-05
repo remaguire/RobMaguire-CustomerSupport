@@ -1,5 +1,7 @@
 package org.example.robmaguirecustomersupport;
 
+import org.example.robmaguirecustomersupport.site.Attachment;
+import org.example.robmaguirecustomersupport.site.Ticket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
