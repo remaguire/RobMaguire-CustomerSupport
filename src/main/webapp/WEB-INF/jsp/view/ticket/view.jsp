@@ -12,12 +12,13 @@
     <p>Subject: <c:out value="${ticket.subject}" /></p>
     <p><c:out value="${ticket.ticketBody}"/></p>
     <c:if test="${ticket.numberOfAttachments > 0}">
-        Attachments:
+        <p>Attachments:</p>
         <c:forEach items="${ticket.attachments}" var="attachment" varStatus="status">
         <c:if test="${!status.first}">, </c:if>
             <a href="<c:url value="/ticket/${ticketId}/attachment/${attachment.value.name}">
                 </c:url>"><c:out value="${attachment.value.name}" /></a>
         </c:forEach>
+        <p />
     </c:if>
 </body>
 </html>

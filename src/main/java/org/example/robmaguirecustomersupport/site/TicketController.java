@@ -81,20 +81,23 @@ public class TicketController {
         return new DownloadingView(attachment.getName(), attachment.getContents());
     }
 
-    @RequestMapping(value = "add", method = RequestMethod.GET)
-    public String add(Map<String, Object> model) {
+    @RequestMapping(value = "create", method = RequestMethod.GET)
+    public String create(Map<String, Object> model) {
         model.put("ticketForm", new TicketForm());
         return "ticket/add";
     }
+    /*public ModelAndView add() {
+        return new ModelAndView("ticketForm", "ticket", new TicketForm());
+    }*/
 
-    @RequestMapping(value = "add", method = RequestMethod.POST)
-    public View add(HttpSession session, @ModelAttribute("ticketForm") TicketForm form) throws IOException {
+    @RequestMapping(value = "create", method = RequestMethod.POST)
+    public View create(HttpSession session, @ModelAttribute("ticketForm") TicketForm ticketForm) throws IOException {
         final var ticket = new Ticket();
         ticket.setCustomerName((String) session.getAttribute("username"));
-        ticket.setSubject(form.getSubject());
-        ticket.setTicketBody(form.getBody());
+        ticket.setSubject(ticketForm.getSubject());
+        ticket.setTicketBody(ticketForm.getBody());
 
-        for (MultipartFile part : form.getAttachments()) {
+        for (MultipartFile part : ticketForm.getAttachments()) {
             final var attachment = new Attachment();
             attachment.setName(part.getOriginalFilename());
             attachment.setContents(part.getBytes());

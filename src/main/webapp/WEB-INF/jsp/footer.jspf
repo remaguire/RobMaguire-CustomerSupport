@@ -1,7 +1,7 @@
 <html>
 <body>
 <nav>
-    <a href="<c:url value="/ticket/add" />">New Ticket</a>
+    <a href="<c:url value="/ticket/create" />">New Ticket</a>
     <a href="<c:url value="/ticket/list" />">List Tickets</a>
     <%
         if (session.getAttribute("username") == null) {
