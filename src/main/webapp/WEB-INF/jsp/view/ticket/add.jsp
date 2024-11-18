@@ -5,7 +5,7 @@
 
 <body>
     <%--@elvariable id="ticketForm" type="org.example.robmaguirecustomersupport.site.TicketController.TicketForm"--%>
-    <form method="post" action="ticket/add" enctype="multipart/form-data" modelAttribute="ticketForm">
+    <form:form method="post" enctype="multipart/form-data" modelAttribute="ticketForm">
         <p><form:label path="subject">Subject</form:label></p>
         <p><form:input path="subject"/></p>
         <p><form:label path="body">Body</form:label>form:label></p>
@@ -13,6 +13,6 @@
         <p><b>Attachments</b></p>>
         <p><input type="file" name="attachments" multiple="multiple"></p>
         <p><input type="submit" value="Submit"></p>>
-    </form>
+    </form:form>
 </body>
 </html>
