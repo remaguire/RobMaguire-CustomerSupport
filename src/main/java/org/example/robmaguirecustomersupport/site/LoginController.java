@@ -9,16 +9,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Controller
 public class LoginController {
     private static final Map<String, String> users = new ConcurrentHashMap<>();
-    private static final List<String> admin = Collections.synchronizedList(new ArrayList<>());
+    private static final Set<String> admin = Collections.synchronizedSet(new HashSet<>());
 
     static {
         users.put("remaguire", "password");
@@ -36,7 +33,7 @@ public class LoginController {
         }
 
         public void setUsername(String username) {
-            this.username = username;
+            this.username = username.toLowerCase(Locale.US);
         }
 
         public String getPassword() {
@@ -46,6 +43,15 @@ public class LoginController {
         public void setPassword(String password) {
             this.password = password;
         }
+    }
+
+    public static boolean isLoggedIn(HttpSession session) {
+        return session != null && session.getAttribute("username") != null;
+    }
+
+    public static boolean isAdmin(HttpSession session) {
+        if (session == null) return false;
+        return admin.contains((String) session.getAttribute("username"));
     }
 
     @RequestMapping("logout")
@@ -79,7 +85,6 @@ public class LoginController {
         }
 
         session.setAttribute("username", user);
-        if (admin.contains(user)) session.setAttribute("admin", true);
         request.changeSessionId();
         return getTicketRedirect();
     }
@@ -108,7 +113,6 @@ public class LoginController {
         }
 
         session.setAttribute("username", user);
-        if (admin.contains(user)) session.setAttribute("admin", true);
         request.changeSessionId();
         return getTicketRedirect();
     }

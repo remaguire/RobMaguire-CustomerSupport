@@ -24,10 +24,10 @@ public class Bootstrap implements WebApplicationInitializer {
         dispatcher.setMultipartConfig(new MultipartConfigElement(null, 20_971_520L, 41_943040L, 512_000));
         dispatcher.addMapping("/");
 
-        final var registrationFilter = appContext.addFilter("registrationFilter", new Filters.FilterForAttribute("username", "/login"));
+        final var registrationFilter = appContext.addFilter("registrationFilter", new Filters.LoggedInFilter());
         registrationFilter.addMappingForUrlPatterns(null, false, "/ticket", "/ticket/*");
 
-        final var adminFilter = appContext.addFilter("adminFilter", new Filters.FilterForAttribute("admin", "/login"));
+        final var adminFilter = appContext.addFilter("adminFilter", new Filters.AdminFilter());
         adminFilter.addMappingForUrlPatterns(null, false, "/session", "/session/*");
     }
 }
