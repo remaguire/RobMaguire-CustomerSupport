@@ -1,7 +1,7 @@
 package org.example.robmaguirecustomersupport;
 
-import org.example.robmaguirecustomersupport.site.Attachment;
-import org.example.robmaguirecustomersupport.site.Ticket;
+import org.example.robmaguirecustomersupport.entities.Attachment;
+import org.example.robmaguirecustomersupport.entities.Ticket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -69,10 +69,10 @@ class TicketTest {
 
     @Test
     void testCustomerName() {
-        assertNull(emptyTicket.getCustomerName());
-        emptyTicket.setCustomerName("Foo Bar");
-        assertEquals("Foo Bar", emptyTicket.getCustomerName());
-        assertEquals("Brent Spiner", ticket.getCustomerName());
+        assertNull(emptyTicket.getUserId());
+        emptyTicket.setUserId("Foo Bar");
+        assertEquals("Foo Bar", emptyTicket.getUserId());
+        assertEquals("Brent Spiner", ticket.getUserId());
     }
 
     @Test
