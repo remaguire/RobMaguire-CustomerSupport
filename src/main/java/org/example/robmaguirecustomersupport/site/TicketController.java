@@ -1,8 +1,9 @@
 package org.example.robmaguirecustomersupport.site;
 
+import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpSession;
 import org.example.robmaguirecustomersupport.entities.Attachment;
-import org.example.robmaguirecustomersupport.entities.Ticket;
+import org.example.robmaguirecustomersupport.entities.UserPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,15 +15,15 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
 @Controller
 @RequestMapping("ticket")
 public class TicketController {
-    private volatile int TICKET_ID_SEQUENCE = 1;
-    private final Map<Integer, Ticket> tickets = new HashMap<>();
+    @Inject
+    TicketService ticketService;
 
     public static class TicketForm {
         private String subject;
@@ -56,13 +57,13 @@ public class TicketController {
 
     @RequestMapping(value = {"", "list"}, method = RequestMethod.GET)
     public String list(Map<String, Object> model) {
-        model.put("tickets", tickets);
+        model.put("tickets", ticketService.getAllTickets());
         return "ticket/list";
     }
 
     @RequestMapping(value = "view/{ticketId}", method = RequestMethod.GET)
     public ModelAndView view(Map<String, Object> model, @PathVariable("ticketId") int ticketId) {
-        final var ticket = tickets.get(ticketId);
+        final var ticket = ticketService.getTicket(ticketId);
         if (ticket == null) return getListRedirectModelAndView();
 
         model.put("ticketId", Integer.toString(ticketId));
@@ -72,7 +73,7 @@ public class TicketController {
 
     @RequestMapping(value = "/{ticketId}/attachment/{attachment:.+}", method = RequestMethod.GET)
     public View download(@PathVariable("ticketId") int ticketId, @PathVariable("attachment") String name) {
-        final var ticket = tickets.get(ticketId);
+        final var ticket = ticketService.getTicket(ticketId);
         if (ticket == null) return getListRedirectView();
 
         final var attachment = ticket.getAttachment(name);
@@ -88,32 +89,25 @@ public class TicketController {
         model.put("ticketForm", new TicketForm());
         return "ticket/add";
     }
-    /*public ModelAndView add() {
-        return new ModelAndView("ticketForm", "ticket", new TicketForm());
-    }*/
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
     public View create(HttpSession session, @ModelAttribute("ticketForm") TicketForm ticketForm) throws IOException {
         final var ticket = new Ticket();
-        ticket.setCustomerName((String) session.getAttribute("username"));
+        ticket.setCustomerName(UserPrincipal.getPrincipal(session).getName());
         ticket.setSubject(ticketForm.getSubject());
         ticket.setTicketBody(ticketForm.getBody());
 
         for (MultipartFile part : ticketForm.getAttachments()) {
             final var attachment = new Attachment();
             attachment.setName(part.getOriginalFilename());
+            attachment.setMimeType(part.getContentType());
             attachment.setContents(part.getBytes());
             if (attachment.getName() != null && attachment.getContents().length > 0)
                 ticket.addAttachment(attachment);
         }
 
-        final int ticketId;
-        synchronized (this) {
-            ticketId = TICKET_ID_SEQUENCE++;
-        }
-
-        tickets.put(ticketId, ticket);
-        return new RedirectView("/ticket/view/" + ticketId, true, false);
+        ticketService.save(ticket);
+        return new RedirectView("/ticket/view/" + ticket.getTicketId(), true, false);
     }
 
     private ModelAndView getListRedirectModelAndView() {

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%--@elvariable id="ticketId" type="java.lang.String"--%>
-<%--@elvariable id="ticket" type="org.example.robmaguirecustomersupport.entities.Ticket"--%>
+<%--@elvariable id="ticket" type="org.example.robmaguirecustomersupport.site.Ticket"--%>
 <html>
 <head>
     <title>Customer Support</title>

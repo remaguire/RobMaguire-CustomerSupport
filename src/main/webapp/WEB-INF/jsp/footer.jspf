@@ -4,13 +4,14 @@
     <a href="<c:url value="/ticket/create" />">New Ticket</a>
     <a href="<c:url value="/ticket/list" />">List Tickets</a>
     <%
-        if (!LoginController.isLoggedIn(session)) {
+        if (!AuthenticationController.isLoggedIn(session)) {
     %>
+    <a href="<c:url value="/login" />">Log in</a>
     <a href="<c:url value="/signup" />">Sign up</a>
     <%
         }
         else {
-            if (LoginController.isAdmin(session)) {
+            if (AuthenticationController.isAdmin(session)) {
     %>
     <a href="<c:url value="/session/list" />">List Sessions</a>
     <%

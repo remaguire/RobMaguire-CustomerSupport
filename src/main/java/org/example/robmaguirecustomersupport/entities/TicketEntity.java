@@ -5,21 +5,19 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 @Entity
 @Table(name = "Ticket")
-public class Ticket implements Serializable {
+public class TicketEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     private long ticketId;
-    private String userId;
+    private long userId;
     private String subject;
     private String ticketBody;
     private Timestamp dateCreated;
-    private Map<String, Attachment> attachments = new HashMap<>();
 
     @Id
     @Column(name = "TicketId")
@@ -34,12 +32,12 @@ public class Ticket implements Serializable {
 
     @Basic
     @Column(name = "UserId")
-    public String getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(String customerName) {
-        this.userId = customerName;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     @Basic
@@ -69,21 +67,5 @@ public class Ticket implements Serializable {
 
     public void setDateCreated(Timestamp dateCreated) {
         this.dateCreated = dateCreated;
-    }
-
-    public void addAttachment(Attachment attachment) {
-        attachments.put(attachment.getName(), attachment);
-    }
-
-    public int getNumberOfAttachments() {
-        return attachments.size();
-    }
-
-    public Attachment getAttachment(String attachmentName) {
-        return attachments.get(attachmentName);
-    }
-
-    public Map<String, Attachment> getAttachments() {
-        return Collections.unmodifiableMap(attachments);
     }
 }

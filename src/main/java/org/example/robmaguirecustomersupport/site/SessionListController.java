@@ -13,7 +13,7 @@ import java.util.Map;
 public class SessionListController {
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String list(Map<String, Object> model, HttpSession session, HttpServletRequest request) {
-        if (LoginController.isAdmin(session)) {
+        if (AuthenticationController.isAdmin(session)) {
             model.put("timestamp", System.currentTimeMillis());
             model.put("numberOfSessions", SessionRegistry.getNumberOfSessions());
             model.put("sessionList", SessionRegistry.getSessions());

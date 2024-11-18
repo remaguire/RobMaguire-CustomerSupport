@@ -13,7 +13,7 @@ public class Filters {
             final var jRequest = (HttpServletRequest) request;
             final var jResponse = (HttpServletResponse) response;
             final var session = jRequest.getSession(false);
-            if (session == null || session.getAttribute("username") == null)
+            if (!AuthenticationController.isLoggedIn(session))
                 jResponse.sendRedirect(jRequest.getContextPath() + "/login");
             else
                 chain.doFilter(request, response);
@@ -26,7 +26,7 @@ public class Filters {
             final var jRequest = (HttpServletRequest) request;
             final var jResponse = (HttpServletResponse) response;
             final var session = jRequest.getSession(false);
-            if (!LoginController.isAdmin(session))
+            if (!AuthenticationController.isAdmin(session))
                 jResponse.sendRedirect(jRequest.getContextPath() + "/login");
             else
                 chain.doFilter(request, response);

@@ -1,6 +1,7 @@
 package org.example.robmaguirecustomersupport.entities;
 
 import jakarta.persistence.*;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -17,6 +18,7 @@ public class UserPrincipal implements Principal, Cloneable, Serializable {
     private long userId;
     private String username;
     private byte[] hashedPassword;
+    private boolean admin;
 
     @Id
     @Column(name = "UserId")
@@ -41,6 +43,16 @@ public class UserPrincipal implements Principal, Cloneable, Serializable {
         return username;
     }
 
+    @Basic
+    @Column(name = "Admin")
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -51,7 +63,15 @@ public class UserPrincipal implements Principal, Cloneable, Serializable {
         return hashedPassword;
     }
 
-    public void setHashedPassword() {
+    public void setHashedPassword(byte[] hashedPassword) {
         this.hashedPassword = hashedPassword;
+    }
+
+    public static Principal getPrincipal(HttpSession session) {
+        return (session == null ? null : (Principal) session.getAttribute(SESSION_ATTRIBUTE_KEY));
+    }
+
+    public static void setPrincipal(HttpSession session, Principal principal) {
+        session.setAttribute(SESSION_ATTRIBUTE_KEY, principal);
     }
 }
