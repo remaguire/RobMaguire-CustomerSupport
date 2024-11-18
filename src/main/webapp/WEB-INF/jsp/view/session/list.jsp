@@ -1,4 +1,5 @@
 <%@ page import="java.util.List" %>
+<%@ page import="org.example.robmaguirecustomersupport.entities.UserPrincipal" %>
 <%!
     private static String toString(long timeInterval) {
         if (timeInterval < 1_000) return "less than one second";
@@ -23,7 +24,11 @@
         <%
             long timestamp = System.currentTimeMillis();
             for (HttpSession ses : sessions) {
-                out.print("<p>" + ses.getId() + " - " + ses.getAttribute("username"));
+                final UserPrincipal principal = (UserPrincipal) UserPrincipal.getPrincipal(ses);
+                if (principal == null)
+                    out.print("<p>" + ses.getId() + " - not logged in");
+                else
+                    out.print("<p>" + ses.getId() + " - " + principal.getUsername());
                 if (ses.getId().equals(session.getId()))
                     out.print(" (you)");
                 out.print(" - last active " + toString(timestamp - ses.getLastAccessedTime()));

@@ -12,9 +12,9 @@
             <p>No tickets have been created.</p>
         </c:when>
         <c:otherwise>
-            <c:forEach var="entry" items="${tickets}">
-                <p>Ticket #${entry.key}: <a href="<c:url value="/ticket/view/${entry.key}"/>">
-                        ${entry.value.subject}</a></p>
+            <c:forEach var="ticket" items="${tickets}">
+                <p>Ticket #${ticket.ticketId}: <a href="<c:url value="/ticket/view/${ticket.ticketId}"/>">
+                        ${ticket.subject}</a></p>
             </c:forEach>
         </c:otherwise>
     </c:choose>
